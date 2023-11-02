@@ -18,3 +18,10 @@
 - Notebook de l'analyse exploratoire et de l'analyse de la qualité des données.
 - Notebooks pour chaque prédiction (émissions de CO2 et consommation d'énergie).
 - Support de présentation pour la soutenance.
+
+## Installation
+
+Pour exécuter le code de ce projet, vous aurez besoin de Python 3.11 ou supérieur. Installez les dépendances à l'aide du fichier `requirements.txt`.
+
+```bash
+pip install -r requirements.txt
