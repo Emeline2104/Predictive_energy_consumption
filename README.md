@@ -15,6 +15,6 @@
 - Modèles de regression (RL, Random Forest, Gradient Boosting, SVR). 
   
 ### Livrables : 
-- Notebook de l'analyse exploratoire.
+- Notebook de l'analyse exploratoire et de l'analyse de la qualité des données.
 - Notebooks pour chaque prédiction (émissions de CO2 et consommation d'énergie).
 - Support de présentation pour la soutenance.
