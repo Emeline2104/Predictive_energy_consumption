@@ -9,7 +9,7 @@
 - Télécharger les données ici : https://data.seattle.gov/dataset/2016-Building-Energy-Benchmarking/2bpz-gwpy.
 - Elles incluent des relevés de la ville de 2016 (données structurelles des bâtiments (taille, usage, date de construction, etc.). 
   
-### Méthodoligie : 
+### Méthodologie : 
 - Analyse exploratoire.
 - Pré-traitement des données.
 - Modèles de regression (RL, Random Forest, Gradient Boosting, SVR). 
