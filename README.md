@@ -17,9 +17,9 @@ Ce projet a été réalisé dans le cadre de la formation diplomante de Data Sci
 - Modèles de regression (RL, Random Forest, Gradient Boosting, SVR). 
   
 ### Livrables : 
-- Notebook de l'analyse exploratoire et de l'analyse de la qualité des données (*TAPIN_Emeline_1_notebook_exploratoire.ipynb*).
-- Notebooks pour chaque prédiction (émissions de CO2 et consommation d'énergie) (*TAPIN_Emeline_2_notebook_prediction.ipynb* & *TAPIN_Emeline_3_notebook_prediction.ipynb*).
-- Support de présentation pour la soutenance (*TAPIN_Emeline_4_presentation*).
+- Notebook de l'analyse exploratoire et de l'analyse de la qualité des données (*1_EDA.ipynb*).
+- Notebooks pour chaque prédiction (émissions de CO2 et consommation d'énergie) (*2_Prediction_consommation.ipynb* & *3_Prediction_emissions.ipynb*).
+- Support de présentation pour la soutenance (*4_Presentation*).
 
 ## Installation
 
