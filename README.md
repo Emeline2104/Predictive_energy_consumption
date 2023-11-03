@@ -5,7 +5,7 @@ Ce projet a été réalisé dans le cadre de la formation diplomante de Data Sci
 ## A propos du projet : 
 
 ### Objectifs : 
-- Développer un modèle de prédiction de consommation énergétique des bâtiments et d'émission de gaz à effet de serre (GES) pour la ville de Seattle. 
+- Développer un modèle de prédiction de consommation énergétique des bâtiments et d'émission de gaz à effet de serre (GES) pour la ville de Seattle.
 
 ### Données : 
 - Les données sont disponibles ici : https://data.seattle.gov/dataset/2016-Building-Energy-Benchmarking/2bpz-gwpy.
@@ -14,7 +14,7 @@ Ce projet a été réalisé dans le cadre de la formation diplomante de Data Sci
 ### Méthodologie : 
 - Analyse exploratoire.
 - Pré-traitement des données (gestion de la qualité des données et feature engineering).
-- Modèles de regression (RL, Random Forest, Gradient Boosting, SVR). 
+- Modèles de regression (RL, Random Forest, Gradient Boosting, SVR) sur différentes méthodes de feature engineering pour sélectionner le modèle optimal.
   
 ### Livrables : 
 - Notebook de l'analyse exploratoire et de l'analyse de la qualité des données (*1_EDA.ipynb*).
