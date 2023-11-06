@@ -16,7 +16,7 @@ Ce projet a été réalisé dans le cadre de la formation diplomante de Data Sci
 - Analyse exploratoire.
 - Pré-traitement des données (gestion de la qualité des données et feature engineering).
 - Modèles de regression (RL, Random Forest, Gradient Boosting, SVR) sur différentes méthodes de feature engineering pour sélectionner le modèle optimal.
-<img width="1004" alt="Capture d’écran 2023-11-03 à 20 21 41" src="https://github.com/Emeline2104/Projet5_TAPIN_Final/assets/133622119/69bc51ff-d6c5-4bf4-b461-3699221b16c0">
+<img width="794" alt="Capture d’écran 2023-11-06 à 13 45 37" src="https://github.com/Emeline2104/Projet5_TAPIN_Final/assets/133622119/ce7934de-5f5a-4b50-b973-e75437df8fb4">
 
 ### Livrables : 
 - Notebook de l'analyse exploratoire et de l'analyse de la qualité des données (*1_EDA.ipynb*).
