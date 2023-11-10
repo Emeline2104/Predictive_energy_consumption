@@ -8,7 +8,7 @@ et entraîner des modèles d'apprentissage automatique.
 
 # Importation des modules nécessaires
 import pandas as pd
-from preprocessing import data_cleaning as Cleaning
+from preprocessing import DataCleaningPipeline, Cleaning
 from preprocessing.feature_engineering import FeatureEngineering, FeatureEngineeringPipeline
 from models.xgboost_model import XGBoostModel, XGBoostPipeline
 from models.baseline_model import RLModel, RLModelPipeline
