@@ -89,8 +89,8 @@ class FeatureEngineering:
         for colonne in columns_to_log:
             x_train[colonne] =x_train[colonne].apply(lambda x: np.log(x) if x != 0 else 0)
             x_test[colonne] = x_test[colonne].apply(lambda x: np.log(x) if x != 0 else 0)
-        print("Columns in x_train:", x_train.columns)
-        print("Columns in x_test:", x_test.columns)
+        #print("Columns in x_train:", x_train.columns)
+        #print("Columns in x_test:", x_test.columns)
         return x_train, x_test, y_train, y_test
 
     @staticmethod
@@ -114,8 +114,8 @@ class FeatureEngineering:
         x_test = x_test.copy()
         x_train['Age'] = current_year - x_train[year_column]
         x_test['Age'] = current_year - x_test[year_column]
-        print("Columns in x_train:", x_train.columns)
-        print("Columns in x_test:", x_test.columns)
+        #print("Columns in x_train:", x_train.columns)
+        #print("Columns in x_test:", x_test.columns)
         return x_train, x_test, y_train, y_test
 
     @staticmethod
@@ -189,8 +189,8 @@ class FeatureEngineering:
         x_test = x_test.select_dtypes(exclude=['object'])
         x_train.drop(columns=colonnes_a_sup, inplace=True)
         x_test.drop(columns=colonnes_a_sup, errors='ignore', inplace=True)
-        print("Columns in x_train:", x_train.columns)
-        print("Columns in x_test:", x_test.columns)
+        #print("Columns in x_train:", x_train.columns)
+        #print("Columns in x_test:", x_test.columns)
         return x_train, x_test, y_train, y_test
 
     @staticmethod
