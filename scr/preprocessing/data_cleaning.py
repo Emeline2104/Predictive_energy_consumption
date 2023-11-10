@@ -19,9 +19,9 @@ Créer une instance de DataCleaningPipeline avec l'instance de Cleaning.
 Exécuter le nettoyage en appelant la méthode clean de la classe DataCleaningPipeline.
 Afficher les données nettoyées.
 """
-
 import pandas as pd
 from sklearn.model_selection import train_test_split
+
 class Cleaning:
     """
     Regroupe les méthodes de nettoyage spécifiques, comme l'extraction des types de bâtiments,
@@ -30,21 +30,8 @@ class Cleaning:
     Chaque méthode effectue une tâche spécifique de nettoyage.
     """
 
-    def __init__(self, data):
-        """
-        Initialise l'instance de Cleaning avec les données à nettoyer.
-
-        Parameters:
-        - data (pd.DataFrame): Le DataFrame contenant les données à nettoyer.
-        """
-        self.data = data
-        # Initialisation des attributs vide de split data
-        self.x_train = None
-        self.x_test = None
-        self.y_train = None
-        self.y_test = None
-
-    def extract_building_types(self):
+    @staticmethod
+    def extract_building_types(data):
         """
         Extrait les données des types de bâtiments spécifiques pour garder les bâtiments 
         non résidentiels.
@@ -54,19 +41,22 @@ class Cleaning:
         """
         # Extraction des bâtiments non résidentiels
         building_types_to_keep = ['NonResidential', 'Nonresidential WA', 'Nonresidential COS']
-        self.data = self.data[self.data['BuildingType'].isin(building_types_to_keep)]
+        data = data[data['BuildingType'].isin(building_types_to_keep)]
 
         # Suppression de données spécifiques
         data_to_remove = [
-                        'Other - Lodging/Residential',
-                        'Residence Hall/Dormitory',
-                        'Residential Care Facility',
-                        'Multifamily Housing',
-                        ]
-        mask = self.data['LargestPropertyUseType'].isin(data_to_remove)
-        self.data = self.data[~mask]
+            'Other - Lodging/Residential',
+            'Residence Hall/Dormitory',
+            'Residential Care Facility',
+            'Multifamily Housing',
+        ]
+        mask = data['LargestPropertyUseType'].isin(data_to_remove)
+        data = data[~mask]
 
-    def drop_outliers(self):
+        return data
+
+    @staticmethod
+    def drop_outliers(data):
         """
         Supprime les valeurs aberrantes du DataFrame selon la colonne 'Outlier' 
         et la 'ComplianceStatus'.
@@ -74,26 +64,30 @@ class Cleaning:
         Returns:
         pandas.DataFrame: Le DataFrame sans les valeurs aberrantes.
         """
-        self.data = self.data[
-            (~self.data['Outlier'].isin(['High outlier', 'Low outlier']))
-            &
-            (self.data['ComplianceStatus'] == 'Compliant')
-            ]
+        data = data[
+            (~data['Outlier'].isin(['High outlier', 'Low outlier']))
+            & (data['ComplianceStatus'] == 'Compliant')
+        ]
 
-    def remove_missing_data(self):
+        return data
+
+    @staticmethod
+    def remove_missing_data(data):
         """
         Supprime les lignes contenant des données manquantes dans un DataFrame.
 
         Returns:
         pd.DataFrame: Le DataFrame nettoyé.
         """
-        self.data = self.data.dropna(
+        data = data.dropna(
             axis=0,
             how='any',
             subset=['LargestPropertyUseType', 'SiteEnergyUse(kBtu)']
-            )
+        )
+        return data
 
-    def apply_usage_correspondence(self):
+    @staticmethod
+    def apply_usage_correspondence(data):
         """
         Applique une table de correspondance des usages à un DataFrame pour mapper les valeurs.
 
@@ -101,35 +95,36 @@ class Cleaning:
         pd.DataFrame: Le DataFrame avec les colonnes d'usage mappées selon la correspondance.
         """
         # Mapping des usages selon une table de correspondance
-        correspondence_usage = {# faire fichier JSON ?
+        correspondence_usage = {
+            # faire fichier JSON ?
             'Data Center': 'Data Center',
             'Urgent Care/Clinic/Other Outpatient': 'Médical',
             'Laboratory': 'Médical',
             'Hospital (General Medical & Surgical)': 'Médical',
             'Supermarket/Grocery Store': 'Magasin',
             'Restaurant': 'Restaurant',
-            'Other/Specialty Hospital' : 'Médical',
-            'Museum' : 'Divertissement', 
-            'Other - Restaurant/Bar' : 'Restaurant',
-            'Other - Recreation' : 'Divertissement',
-            'Police Station' :'Service public',
-            'Parking' :'Parking',
-            'Lifestyle Center' :'Sport', 
-            'Senior Care Community' :'Service',
+            'Other/Specialty Hospital': 'Médical',
+            'Museum': 'Divertissement',
+            'Other - Restaurant/Bar': 'Restaurant',
+            'Other - Recreation': 'Divertissement',
+            'Police Station': 'Service public',
+            'Parking': 'Parking',
+            'Lifestyle Center': 'Sport',
+            'Senior Care Community': 'Service',
             'Other - Education': 'Education',
             'Personal Services (Health/Beauty, Dry Cleaning...': 'Service à la personne',
             'Manufacturing/Industrial Plant': 'Usine industrielle',
             'Fitness Center/Health Club/Gym': 'Sport',
-            'Wholesale Club/Supercenter': 'Magasin', 
+            'Wholesale Club/Supercenter': 'Magasin',
             'Medical Office': 'Médical',
             'Other': 'Autres',
             'Social/Meeting Hall': 'Divertissement',
-            'Strip Mall': 'Supermarché', 
+            'Strip Mall': 'Supermarché',
             'Other - Entertainment/Public Assembly': 'Divertissement',
             'Other - Public Services': 'Service public',
             'Courthouse': 'Service public',
             'Movie Theater': 'Divertissement',
-            'Hotel': 'Hotel', 
+            'Hotel': 'Hotel',
             'Fire Station': 'Service public',
             'Refrigerated Warehouse': 'Stockage',
             'College/University': 'Education',
@@ -137,21 +132,21 @@ class Cleaning:
             'Library': 'Education',
             'Bank Branch': 'Service',
             'Adult Education': 'Education',
-            'Retail Store' : 'Magasin', 
+            'Retail Store': 'Magasin',
             'Prison/Incarceration': 'Service public',
             'Office': 'Bureaux',
             'Other - Services': 'Service',
             'Performing Arts': 'Divertissement',
-            'Repair Services (Vehicle, Shoe, Locksmith, etc)': 'Service', 
-            'K-12 School': 'Education', 
+            'Repair Services (Vehicle, Shoe, Locksmith, etc)': 'Service',
+            'K-12 School': 'Education',
             'Pre-school/Daycare': 'Education',
-            'Automobile Dealership': 'Autres', 
-            'Other - Utility': 'Autres', 
+            'Automobile Dealership': 'Autres',
+            'Other - Utility': 'Autres',
             'Non-Refrigerated Warehouse': 'Stockage',
             'Distribution Center': 'Magasin',
-            'Worship Facility': 'Lieu de culte', 
+            'Worship Facility': 'Lieu de culte',
             'Self-Storage Facility': 'Stockage',
-            'Other - Mall': 'Supermarché', 
+            'Other - Mall': 'Supermarché',
             'Food Service': 'Restaurant',
             'Personal Services (Health/Beauty, Dry Cleaning, etc)': 'Service',
         }
@@ -159,17 +154,20 @@ class Cleaning:
             'LargestPropertyUseType',
             'SecondLargestPropertyUseType',
             'ThirdLargestPropertyUseType',
-            ]
+        ]
         final_usages = [
             'TypeUtilisationPrincipale',
             'TypeUtilisationSecondaire',
             'TypeUtilisationTertiaire',
-            ]
+        ]
 
         for i, col in enumerate(usage_columns):
-            self.data[final_usages[i]] = self.data[col].map(correspondence_usage)
+            data[final_usages[i]] = data[col].map(correspondence_usage)
 
-    def split_data(self):
+        return data
+
+    @staticmethod
+    def split_data(data):
         """
         Prépare les données en séparant les features et la target, effectue la 
         stratification et renvoie les ensembles d'entraînement et de test.
@@ -183,64 +181,57 @@ class Cleaning:
         indic_conso = ['SiteEnergyUse(kBtu)']
 
         # Crée une table de features en supprimant les colonnes d'indicateurs de consommation
-        features = self.data.drop(columns=indic_conso)
+        features = data.drop(columns=indic_conso)
 
         # Crée une table de target en incluant uniquement les colonnes d'indicateurs de consommation
-        target = self.data[indic_conso]
+        target = data[indic_conso]
 
         # Convertit la colonne 'TypeUtilisationPrincipale' en chaîne de caractères
         features['TypeUtilisationPrincipale'] = features['TypeUtilisationPrincipale'].astype(str)
 
         # Stratification sur la variable catégorielle pour obtenir x_train et x_test
-        self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(
+        x_train, x_test, y_train, y_test = train_test_split(
             features, target, test_size=0.2, random_state=None,
             stratify=features['TypeUtilisationPrincipale'],
         )
 
-        print("Dimensions de l'ensemble d'entraînement :", self.x_train.shape, self.y_train.shape)
-        print("Dimensions de l'ensemble de test :", self.x_test.shape, self.y_test.shape)
+        print("Dimensions de l'ensemble d'entraînement :", x_train.shape, y_train.shape)
+        print("Dimensions de l'ensemble de test :", x_test.shape, y_test.shape)
 
         # Conversion des arrays NumPy en DataFrames
-        self.x_train = pd.DataFrame(self.x_train, columns=features.columns)
-        self.x_test = pd.DataFrame(self.x_test, columns=features.columns)
-        self.y_train = pd.DataFrame(self.y_train, columns=target.columns)
-        self.y_test = pd.DataFrame(self.y_test, columns=target.columns)
+        x_train = pd.DataFrame(x_train, columns=features.columns)
+        x_test = pd.DataFrame(x_test, columns=features.columns)
+        y_train = pd.DataFrame(y_train, columns=target.columns)
+        y_test = pd.DataFrame(y_test, columns=target.columns)
+
+        return x_train, x_test, y_train, y_test
 
 class DataCleaningPipeline:
     """
     Classe représentant un pipeline de nettoyage de données.
     """
+    def __init__(self, steps):
+        self.steps = steps
+        self.x_train = None
+        self.x_test = None
+        self.y_test = None
+        self.y_train = None
 
-    def __init__(self, cleaning_instance):
+    def run_pipeline(self, data):
         """
-        Initialise le pipeline avec une instance de Cleaning.
+        Applique les étapes de nettoyage spécifiées dans la pipeline.
 
-        Parameters:
-        - cleaning_instance (Cleaning): L'instance de Cleaning à utiliser pour le nettoyage.
-        """
-        self.cleaning_instance = cleaning_instance
-
-    def clean(self):
-        """
-        Applique les étapes de nettoyage sur les données.
-
-        Parameters:
-        - data (pd.DataFrame): Le DataFrame contenant les données à nettoyer.
+        Args:
+            data (pd.DataFrame): Les données à nettoyer.
 
         Returns:
-        pd.DataFrame: Le DataFrame nettoyé.
+            Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]: Les données nettoyées 
+            après avoir appliqué chaque étape.
         """
-        # Appel des méthodes de nettoyage
-        self.cleaning_instance.extract_building_types()
-        self.cleaning_instance.drop_outliers()
-        self.cleaning_instance.remove_missing_data()
-        self.cleaning_instance.apply_usage_correspondence()
-        self.cleaning_instance.split_data()
-        
-        return (
-            self.cleaning_instance.x_train,
-            self.cleaning_instance.x_test,
-            self.cleaning_instance.y_train,
-            self.cleaning_instance.y_test
-        )
+        for step in self.steps:
+            data = step(data)
+
+        # Supposons que la dernière étape renvoie les données nettoyées prêtes à être divisées
+        x_train, x_test, y_train, y_test = Cleaning.split_data(data)
+        return x_train, x_test, y_train, y_test
     
