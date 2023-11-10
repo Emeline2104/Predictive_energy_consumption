@@ -235,7 +235,7 @@ class FeatureEngineeringPipeline:
     def __init__(self, steps):
         self.steps = steps
 
-    def clean(self, x_train, x_test, y_train, y_test):
+    def run_pipeline(self, x_train, x_test, y_train, y_test):
         """
         Applique les étapes de nettoyage spécifiées dans la pipeline.
 
@@ -253,29 +253,3 @@ class FeatureEngineeringPipeline:
             x_train, x_test, y_train, y_test = step(x_train, x_test, y_train, y_test)
         return x_train, x_test, y_train, y_test
 
-
-liste_utilisation_target = ['Categorie1_Encoded', 'Categorie2_Encoded', 'Categorie3_Encoded']
-group_columns_utilisation = [
-    'TypeUtilisationPrincipale',
-    'TypeUtilisationSecondaire',
-    'TypeUtilisationTertiaire',
-    ]
-
-# Feature Engineering
-features_engineering_pipeline = FeatureEngineeringPipeline(steps=[
-    FeatureEngineering.process_physical_data,
-    FeatureEngineering.add_age_feature,
-    lambda x_train, x_test, y_train, y_test: FeatureEngineering.encode_target(
-        x_train, x_test, y_train, y_test,
-        group_columns=group_columns_utilisation,
-        new_column_names=liste_utilisation_target,
-        ),
-    FeatureEngineering.preprocess_neighborhood_data,
-    lambda x_train, x_test, y_train, y_test: FeatureEngineering.encode_target(
-        x_train, x_test, y_train, y_test,
-        group_columns=['Neighborhood'],
-        new_column_names=['Neighborhood_Encoded'],
-        ),
-    FeatureEngineering.clean_numerical_columns,
-    FeatureEngineering.clean_data,
-])
