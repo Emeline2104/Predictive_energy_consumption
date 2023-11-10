@@ -1,1 +1,4 @@
 Projet_4.egg-info/
+/venv/
+scr/preprocessing/__pycache__
+scr/__pycache__
