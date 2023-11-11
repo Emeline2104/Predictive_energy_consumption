@@ -19,7 +19,7 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'nom_script = scr.main:main',
+            'nom_script = main',
         ],
     },
 )

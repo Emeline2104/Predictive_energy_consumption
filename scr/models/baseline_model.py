@@ -116,7 +116,7 @@ class RLModel:
         self.rmse_test = np.sqrt(mean_squared_error(y_test, y_pred))
         print(f"RMSE de test: {self.rmse_test:.2f}")
         self.r2_test = r2_score(y_test, y_pred)
-        print(f"R2 Score de test: {self.rmse_test:.2f}")
+        print(f"R2 Score de test: {self.r2_test:.2f}")
 
     def get_best_model(self):
         """
