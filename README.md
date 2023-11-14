@@ -13,8 +13,8 @@ Ce projet a été réalisé dans le cadre de la formation diplomante de Data Sci
 - Elles incluent des relevés de la ville de 2016 (données structurelles des bâtiments (taille, usage, date de construction, etc.). 
   
 ### Méthodologie : 
-- Analyse exploratoire.
-- Exploration des différentes méthodes de pré-traitement des données (gestion de la qualité des données et feature engineering) et des modèles de regression (RL, Random Forest, Gradient Boosting, SVR) sur différentes méthodes de feature engineering pour sélectionner le modèle optimal.
+- Analyse exploratoire des données.
+- Exploration des différentes méthodes de pré-traitement des données (gestion de la qualité des données et feature engineering) et des modèles de regression (RL, Random Forest, Gradient Boosting, SVR) pour sélectionner le modèle optimal.
 - Mise en place de pipelines et pré-traitement et de modèlé de prédiction des consommations énergétiques des batiments.
 <img width="794" alt="Capture d’écran 2023-11-06 à 13 45 37" src="https://github.com/Emeline2104/Projet5_TAPIN_Final/assets/133622119/ce7934de-5f5a-4b50-b973-e75437df8fb4">
 
@@ -32,7 +32,7 @@ Ce projet a été réalisé dans le cadre de la formation diplomante de Data Sci
   - Entraînement et évaluation d'un modèle de régression baseline (régression linéaire (RL)) en utilisant le pipeline défini dans le module baseline_model (*baseline_model.py*);
   - Entraînement et évaluation d'un modèle XGBoost en utilisant le pipeline défini dans le module xgboost_model (*xgboost_model.py*).
     
-#### Support de présentation de l'analyse exploratoire pour la soutenance (*Presentation*).
+#### Support de présentation de l'analyse exploratoire pour la soutenance (*3_Presentation*).
 
 ## Installation
 
@@ -40,10 +40,18 @@ Pour exécuter le code de ce projet, vous aurez besoin de Python 3.11 ou supéri
 
 ```bash
 pip install -r requirements.txt
+```
 
+Le fichier setup.py est également inclus pour permettre l'installation et la distribution du projet en tant que package Python. Il spécifie les dépendances nécessaires pour le projet. Vous pouvez installer ces dépendances en exécutant la commande suivante :
+```bash
+pip install .
+```
+
+## Execution du script
 Pour exécuter le script, assurez-vous d'avoir Python 3.11 ou supérieur installé et exécutez la commande suivante dans le terminal :
 
 ```bash
 python main.py
-
+```
 Assurez-vous également de personnaliser les chemins et les paramètres dans le fichier config.py selon les besoins de votre projet.
+
