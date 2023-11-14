@@ -1,4 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 Projet_4.egg-info/
-/venv/
-scr/preprocessing/__pycache__
-scr/__pycache__
+build/
+dist/
+data/
+venv/
+*.log
+.vscode/
+

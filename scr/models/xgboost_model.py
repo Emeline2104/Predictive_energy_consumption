@@ -50,6 +50,7 @@ class XGBoostModel:
     - get_feature_importance : Calcule et affiche l'importance des caractéristiques.
     - get_best_model : Retourne le meilleur modèle entraîné.
     - get_best_params : Retourne les meilleurs paramètres trouvés par la recherche sur grille.
+    - get_score : Retourne les scores R2 et RMSE du modèlé entraîné.
     """
     def __init__(self):
         """
@@ -179,6 +180,12 @@ class XGBoostModel:
         """
         return self.best_params
 
+    def get_score(self):
+        """
+        Obtient le score RMSE de test et R2 de test.
+        """
+        return self.rmse_test, self.r2_test
+    
 class XGBoostPipeline:
     """
     Classe représentant un pipeline XGBoost complet.
@@ -188,7 +195,7 @@ class XGBoostPipeline:
                         et l'évaluation du modèle.
 
     Méthodes :
-    - run_pipeline : Exécute le pipeline complet, comprenant l'entraînement, la validation croisée, 
+    - train_fit : Exécute le pipeline complet, comprenant l'entraînement, la validation croisée, 
                 la prédiction, l'évaluation et l'affichage de l'importance des caractéristiques.
     """
     def __init__(self, model_trainer):
@@ -199,7 +206,7 @@ class XGBoostPipeline:
         """
         self.model_trainer = model_trainer
 
-    def run_pipeline(self, x_train, x_test, y_train, y_test):
+    def train_fit(self, x_train, x_test, y_train, y_test):
         """
         Exécute le pipeline complet.
 

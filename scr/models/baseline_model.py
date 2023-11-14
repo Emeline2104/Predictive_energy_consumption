@@ -34,6 +34,7 @@ class RLModel:
     - cross_validate : Effectue une validation croisée pour évaluer les performances du modèle.
     - predict_and_evaluate : Prédit et évalue le modèle sur les données de test.
     - get_best_model : Retourne le meilleur modèle entraîné.
+    - get_score : Retourne les scores R2 et RMSE du modèlé entraîné.
     """
     def __init__(self):
         """
@@ -124,6 +125,11 @@ class RLModel:
         """
         return self.model
 
+    def get_score(self):
+        """
+        Obtient le score RMSE de test et R2 de test.
+        """
+        return self.rmse_test, self.r2_test
 class RLModelPipeline:
     """
     Classe représentant un pipeline regression linéaire complet.
@@ -133,7 +139,7 @@ class RLModelPipeline:
                         et l'évaluation du modèle.
 
     Méthodes :
-    - run_pipeline : Exécute le pipeline complet, comprenant l'entraînement, la validation croisée, 
+    - train_fit : Exécute le pipeline complet, comprenant l'entraînement, la validation croisée, 
                 la prédiction et l'évaluation du modèle.
     """
     def __init__(self, model_trainer):
@@ -144,7 +150,7 @@ class RLModelPipeline:
         """
         self.model_trainer = model_trainer
 
-    def run_pipeline(self, x_train, x_test, y_train, y_test):
+    def train_fit(self, x_train, x_test, y_train, y_test):
         """
         Exécute le pipeline complet.
 
