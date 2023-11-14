@@ -4,25 +4,25 @@ Fichier : feature_engineering.py
 Ce fichier regroupe des classes pour le nettoyage de données.
 
 Classes :
-- FeatureEngineering : Regroupe des méthodes spécifiques aux feature engineering.
-Méthodes : encode_target, process_physical_data, add_age_feature, 
+- DataFeatureEngineering : Regroupe des méthodes spécifiques aux feature engineering.
+Méthodes : encode_target, process_physical_data, add_age_feature,
 preprocess_neighborhood_data, clean_numerical_columns, clean_data
-- FeatureEngineering : Pipeline de nettoyage de données avec une étape de nettoyage 
+- FeatureEngineeringPipeline : Pipeline de nettoyage de données avec une étape de nettoyage 
 de type FeatureEngineering.
-Méthode : clean.
+Méthode : transform.
 
 Utilisation :
-Charger les données néttoyer (x_train, y_train, x_test, y_test).
-Créer une instance de FeatureEngineering avec ces données.
-Créer une instance de FeatureEngineeringPipeline avec l'instance de FeatureEngineering.
-Exécuter le feature engineering en appelant la méthode clean de la FeatureEngineeringPipeline.
+Charger les données à nettoyer (x_train, y_train, x_test, y_test).
+Créer une instance de DataFeatureEngineering avec ces données.
+Créer une instance de FeatureEngineeringPipeline avec l'instance de DataFeatureEngineering.
+Exécuter le feature engineering en appelant la méthode transform de la FeatureEngineeringPipeline.
 Afficher les données nettoyées.
 """
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
-class FeatureEngineering:
+class DataFeatureEngineering:
     """
     Regroupe les méthodes de feature engineering spécifiques, comme le target encoding,
     le preproccess des données physiques, la gestion de l'âge des bâtiments, 
@@ -30,7 +30,7 @@ class FeatureEngineering:
     Chaque méthode effectue une tâche spécifique de feature engineering.
     """
     @staticmethod
-    def encode_target(x_train, x_test, y_train, y_test, group_columns, new_column_names):
+    def encode_target(x_train, x_test, y_train, y_test):
         """
         Encode plusieurs variables catégorielles en utilisant la moyenne de la variable cible 
         par catégorie.
@@ -39,25 +39,38 @@ class FeatureEngineering:
         :param x_test: DataFrame de test.
         :param y_train: Variable cible des données d'entraînement.
         :param y_test: Variable cible des données de test.
-        :param group_columns: Liste des noms des colonnes catégorielles à encoder.
-        :param new_column_names: Liste des noms de nouvelles colonnes qui stockeront 
-        les moyennes encodées.
 
         :return: DataFrame avec les nouvelles colonnes encodées.
         """
         indic_conso = ['SiteEnergyUse(kBtu)']
 
-        for i, column in enumerate(group_columns):
-            # Calcul des moyennes de la variable cible par catégorie
-            target_mean = y_train.groupby(x_train[column])[indic_conso[0]].mean()
+        # Liste des noms des colonnes à encoder
+        liste_utilisation_target = ['Categorie1_Encoded',
+                                    'Categorie2_Encoded',
+                                    'Categorie3_Encoded',
+                                    ]
+        group_columns_utilisation = [
+            'TypeUtilisationPrincipale',
+            'TypeUtilisationSecondaire',
+            'TypeUtilisationTertiaire',
+        ]
 
-            # Encodage de la variable catégorielle en utilisant les moyennes
-            x_train[new_column_names[i]] = x_train[column].map(target_mean)
-            x_test[new_column_names[i]] = x_test[column].map(target_mean)
+        # Groupes de colonnes et de nouveaux noms de colonnes
+        group_columns = [group_columns_utilisation, ['Neighborhood']]
+        new_column_names = [liste_utilisation_target, ['Neighborhood_Encoded']]
 
-            # Remplacement des valeurs manquantes par 0 (ou une autre valeur au choix)
-            x_train[new_column_names[i]].fillna(0, inplace=True)
-            x_test[new_column_names[i]].fillna(0, inplace=True)
+        for group_column, new_columns in zip(group_columns, new_column_names):
+            for i, column in enumerate(group_column):
+                # Calcul des moyennes de la variable cible par catégorie
+                target_mean = y_train.groupby(x_train[column])[indic_conso[0]].mean()
+
+                # Encodage de la variable catégorielle en utilisant les moyennes
+                x_train[new_columns[i]] = x_train[column].map(target_mean)
+                x_test[new_columns[i]] = x_test[column].map(target_mean)
+
+                # Remplacement des valeurs manquantes par 0 (ou une autre valeur au choix)
+                x_train[new_columns[i]].fillna(0, inplace=True)
+                x_test[new_columns[i]].fillna(0, inplace=True)
 
         return x_train, x_test, y_train, y_test
 
@@ -89,8 +102,6 @@ class FeatureEngineering:
         for colonne in columns_to_log:
             x_train[colonne] =x_train[colonne].apply(lambda x: np.log(x) if x != 0 else 0)
             x_test[colonne] = x_test[colonne].apply(lambda x: np.log(x) if x != 0 else 0)
-        #print("Columns in x_train:", x_train.columns)
-        #print("Columns in x_test:", x_test.columns)
         return x_train, x_test, y_train, y_test
 
     @staticmethod
@@ -114,8 +125,6 @@ class FeatureEngineering:
         x_test = x_test.copy()
         x_train['Age'] = current_year - x_train[year_column]
         x_test['Age'] = current_year - x_test[year_column]
-        #print("Columns in x_train:", x_train.columns)
-        #print("Columns in x_test:", x_test.columns)
         return x_train, x_test, y_train, y_test
 
     @staticmethod
@@ -230,26 +239,56 @@ class FeatureEngineering:
 
 class FeatureEngineeringPipeline:
     """
-    Classe représentant un pipeline de feature engineering.
-    """
-    def __init__(self, steps):
-        self.steps = steps
+    Classe représentant un pipeline de nettoyage de données.
 
-    def run_pipeline(self, x_train, x_test, y_train, y_test):
+    Attributes:
+    transformer (DataCleaner): Le transformateur utilisé pour nettoyer les données. 
+    """
+    def __init__(self, transformer):
+        self.transformer = transformer
+
+    def transform(self, x_train, x_test, y_train, y_test):
         """
-        Applique les étapes de nettoyage spécifiées dans la pipeline.
+        Transforme les données en appliquant les étapes de nettoyage spécifiées 
+        par le transformateur.
 
         Args:
-            x_train (pd.DataFrame): Les données d'entraînement.
-            x_test (pd.DataFrame): Les données de test.
-            y_train (pd.Series): La variable cible des données d'entraînement.
-            y_test (pd.Series): La variable cible des données de test.
+        data (pd.DataFrame): Le DataFrame contenant les données à nettoyer.
 
         Returns:
-            Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]: Les données nettoyées 
-            après avoir appliqué chaque étape.
+        x_train (pd.DataFrame): Ensemble d'entraînement des features.
+        x_test (pd.DataFrame): Ensemble de test des features.
+        y_train (pd.DataFrame): Ensemble d'entraînement de la target.
+        y_test (pd.DataFrame): Ensemble de test de la target.
         """
-        for step in self.steps:
-            x_train, x_test, y_train, y_test = step(x_train, x_test, y_train, y_test)
-        return x_train, x_test, y_train, y_test
+        x_train, x_test, y_train, y_test = self.transformer.process_physical_data(x_train,
+                                                                                  x_test,
+                                                                                  y_train,
+                                                                                  y_test)
+        x_train, x_test, y_train, y_test = self.transformer.add_age_feature(x_train,
+                                                                            x_test,
+                                                                            y_train,
+                                                                            y_test)
+        x_train, x_test, y_train, y_test = self.transformer.add_age_feature(x_train,
+                                                                            x_test,
+                                                                            y_train,
+                                                                            y_test)
+        x_train, x_test, y_train, y_test = self.transformer.encode_target(x_train,
+                                                                          x_test,
+                                                                          y_train,
+                                                                          y_test,
+                                                                          )
+        x_train, x_test, y_train, y_test = self.transformer.clean_numerical_columns(
+            x_train,
+            x_test,
+            y_train,
+            y_test,
+            )
+        x_train, x_test, y_train, y_test = self.transformer.clean_data(
+            x_train,
+            x_test,
+            y_train,
+            y_test,
+            )
 
+        return x_train, x_test, y_train, y_test
