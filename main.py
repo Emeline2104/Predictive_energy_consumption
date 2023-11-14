@@ -8,78 +8,70 @@ et entraîner des modèles d'apprentissage automatique.
 
 # Importation des modules nécessaires
 import pandas as pd
-from scr.preprocessing.data_cleaning import DataCleaningPipeline, Cleaning
-from scr.preprocessing.feature_engineering import FeatureEngineering, FeatureEngineeringPipeline
+import logging
+from scr.preprocessing.data_cleaning import DataCleaningPipeline, DataCleaner
+from scr.preprocessing.feature_engineering import DataFeatureEngineering, FeatureEngineeringPipeline
 from scr.models.xgboost_model import XGBoostModel, XGBoostPipeline
 from scr.models.baseline_model import RLModel, RLModelPipeline
-from scr.config import data_file_path
+from scr.config import DATA_FILE_PATH
 
-def main(data): 
+def main():
     """
     Fonction principale pour l'exécution des étapes de nettoyage, d'ingénierie des features
     et d'entraînement des modèles.
 
-    Parameters:
-        data (pd.DataFrame): Le DataFrame contenant les données à traiter.
-
     Returns:
         None
     """
+    # Configuration du logging
+    logging.basicConfig(filename='logfile.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+    # Chargement des données
+    data_conso = pd.read_csv(DATA_FILE_PATH)
+
     # Nettoyage des données
-    data_cleaning_pipeline = DataCleaningPipeline(steps=[
-        Cleaning.extract_building_types,
-        Cleaning.drop_outliers,
-        Cleaning.remove_missing_data,
-        Cleaning.apply_usage_correspondence,
-    ])
+    logging.info('Début du nettoyage des données.')
+    cleaning_pipeline = DataCleaningPipeline(DataCleaner)
+    train_features, test_features, train_target, test_target = cleaning_pipeline.transform(
+        data_conso,
+        )
+    logging.info('Nettoyage des données terminé.')
 
-    # Exécute le pipeline de nettoyage sur les données
-    train_features, test_features, train_target, test_target = data_cleaning_pipeline.run_pipeline(data)
-
-    # Feature Engineering
-    liste_utilisation_target = ['Categorie1_Encoded', 'Categorie2_Encoded', 'Categorie3_Encoded']
-    group_columns_utilisation = [
-        'TypeUtilisationPrincipale',
-        'TypeUtilisationSecondaire',
-        'TypeUtilisationTertiaire',
-    ]
-
-    features_engineering_pipeline = FeatureEngineeringPipeline(steps=[
-        FeatureEngineering.process_physical_data,
-        FeatureEngineering.add_age_feature,
-        lambda train_features, test_features, train_target, test_target: FeatureEngineering.encode_target(
-            train_features, test_features, train_target, test_target,
-            group_columns=group_columns_utilisation,
-            new_column_names=liste_utilisation_target,
-        ),
-        FeatureEngineering.preprocess_neighborhood_data,
-        lambda train_features, test_features, train_target, test_target: FeatureEngineering.encode_target(
-            train_features, test_features, train_target, test_target,
-            group_columns=['Neighborhood'],
-            new_column_names=['Neighborhood_Encoded'],
-        ),
-        FeatureEngineering.clean_numerical_columns,
-        FeatureEngineering.clean_data,
-    ])
 
     # Exécute le pipeline de feature engineering sur les données nettoyées
-    train_features, test_features, train_target, test_target = features_engineering_pipeline.run_pipeline(train_features, test_features, train_target, test_target)
+    logging.info('Début de l\'ingénierie des fonctionnalités.')
+    feature_engineering_pipeline = FeatureEngineeringPipeline(DataFeatureEngineering)
+    train_features, test_features, train_target, test_target = feature_engineering_pipeline.transform(
+        train_features,
+        test_features,
+        train_target,
+        test_target,
+        )
+    logging.info('Ingénierie des fonctionnalités terminée.')
 
     # Modèle de base (RL)
-    print("Réalisation de la regression Baseline (RL)")
+    logging.info('Début de l\'entraînement du modèle de base (RL).')
     baseline_model = RLModel()
     baseline_pipeline = RLModelPipeline(baseline_model)
-    baseline_pipeline.run_pipeline(train_features, test_features, train_target, test_target)
-    print("####################")
+    baseline_pipeline.train_fit(train_features, test_features, train_target, test_target)
+    logging.info('Fin de l\'entraînement du modèle de base (RL).')
+    # Évaluation du modèle et enregistrement des métriques
+    rmse_test, r2_test = baseline_model.get_score()
+    logging.info('Métriques de test du modèle de base (RL):')
+    logging.info('RMSE: %f', rmse_test)
+    logging.info('R2: %f', r2_test)
 
     # Modèle XGBoost
-    print("Réalisation de la regression XGBoost")
+    logging.info('Début de l\'entraînement du modèle XGBoost.')
     xgboost_model = XGBoostModel()
-    xgboost_pipeline =   XGBoostPipeline(xgboost_model)  
-    # plus dissiqué pour faire apparaître les méthodes ?
-    xgboost_pipeline.run_pipeline(train_features, test_features, train_target, test_target)
+    xgboost_pipeline = XGBoostPipeline(xgboost_model)
+    xgboost_pipeline.train_fit(train_features, test_features, train_target, test_target)
+    logging.info('Fin de l\'entraînement du modèle XGBoost.')
+    # Évaluation du modèle et enregistrement des métriques
+    rmse_test, r2_test = xgboost_model.get_score()
+    logging.info('Métriques de test du modèle XGBoost:')
+    logging.info('RMSE: %f', rmse_test)
+    logging.info('R2: %f', r2_test)
 
 if __name__ == "__main__":
-    data_conso = pd.read_csv(data_file_path)
-    main(data_conso)
-
+    main()

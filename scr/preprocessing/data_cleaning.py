@@ -5,29 +5,29 @@ Ce fichier regroupe des classes pour le nettoyage de données.
 
 
 Classes :
-- Cleaning : Regroupe des méthodes spécifiques de nettoyage de données.
+- DataCleaner : Regroupe des méthodes spécifiques de nettoyage de données.
 Méthodes : extract_building_types, drop_outliers, remove_missing_data, apply_usage_correspondence,
 split_data
 - DataCleaningPipeline : Pipeline de nettoyage de données avec une étape de nettoyage 
-de type Cleaning.
-Méthode : clean.
+de type DataCleaner.
+Méthode : transform.
 
 Utilisation :
 Charger les données à nettoyer depuis un fichier CSV.
-Créer une instance de Cleaning avec ces données.
-Créer une instance de DataCleaningPipeline avec l'instance de Cleaning.
-Exécuter le nettoyage en appelant la méthode clean de la classe DataCleaningPipeline.
+Créer une instance de DataCleaner avec ces données.
+Créer une instance de DataCleaningPipeline avec l'instance de DataCleaner.
+Exécuter le nettoyage en appelant la méthode transform de la classe DataCleaningPipeline.
 Afficher les données nettoyées.
 """
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-class Cleaning:
+class DataCleaner:
     """
     Regroupe les méthodes de nettoyage spécifiques, comme l'extraction des types de bâtiments,
     la suppression des valeurs aberrantes, la suppression des données manquantes, 
     et l'application de la correspondance des usages.
-    Chaque méthode effectue une tâche spécifique de nettoyage.
+    Chaque méthode effectue une tâche spécifique de nettoyage correspondant à un transformer.
     """
 
     @staticmethod
@@ -209,29 +209,42 @@ class Cleaning:
 class DataCleaningPipeline:
     """
     Classe représentant un pipeline de nettoyage de données.
+
+    Attributes:
+    transformer (DataCleaner): Le transformateur utilisé pour nettoyer les données.
+    x_train (pd.DataFrame): Ensemble d'entraînement des features.
+    x_test (pd.DataFrame): Ensemble de test des features.
+    y_train (pd.DataFrame): Ensemble d'entraînement de la target.
+    y_test (pd.DataFrame): Ensemble de test de la target.
     """
-    def __init__(self, steps):
-        self.steps = steps
+    def __init__(self, transformer):
+        self.transformer = transformer
         self.x_train = None
         self.x_test = None
         self.y_test = None
         self.y_train = None
 
-    def run_pipeline(self, data):
+    def transform(self, data):
         """
-        Applique les étapes de nettoyage spécifiées dans la pipeline.
+        Transforme les données en appliquant les étapes de nettoyage spécifiées 
+        par le transformateur.
 
         Args:
-            data (pd.DataFrame): Les données à nettoyer.
+        data (pd.DataFrame): Le DataFrame contenant les données à nettoyer.
 
         Returns:
-            Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]: Les données nettoyées 
-            après avoir appliqué chaque étape.
+        x_train (pd.DataFrame): Ensemble d'entraînement des features.
+        x_test (pd.DataFrame): Ensemble de test des features.
+        y_train (pd.DataFrame): Ensemble d'entraînement de la target.
+        y_test (pd.DataFrame): Ensemble de test de la target.
         """
-        for step in self.steps:
-            data = step(data)
+        data = self.transformer.extract_building_types(data)
+        data = self.transformer.drop_outliers(data)
+        data = self.transformer.remove_missing_data(data)
+        data = self.transformer.apply_usage_correspondence(data)
 
-        # Supposons que la dernière étape renvoie les données nettoyées prêtes à être divisées
-        x_train, x_test, y_train, y_test = Cleaning.split_data(data)
+        x_train, x_test, y_train, y_test = self.transformer.split_data(data)
         return x_train, x_test, y_train, y_test
-    
+
+if __name__ == "__main__":
+    data_conso = pd.read_csv("data/cleaned/data_extract.csv") # A mettre en maj -> var globale
