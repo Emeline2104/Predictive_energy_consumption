@@ -24,13 +24,13 @@ Des pipelines ont été mis en place pour le pré-traitement des données et la 
 ### Livrables : 
 
 #### Notebooks :
-- Notebook de l'analyse exploratoire et de l'analyse de la qualité des données ([1_EDA.ipynb](https://github.com/Emeline2104/Predictive_energy_consumption/blob/master/notebooks/1_EDA.ipynb))
-- Notebook exploratoire des méthodes utilisées (features engineering & modèles de prédiction) ([2_Prediction_consommation.ipynb](https://github.com/Emeline2104/Predictive_energy_consumption/blob/master/notebooks/2_Prediction_consommation.ipynb))
+- Notebook de l'analyse exploratoire et de l'analyse de la qualité des données ([1_EDA.ipynb](https://github.com/Emeline2104/Predictive_energy_consumption/blob/master/notebooks/1_EDA.ipynb)); 
+- Notebook exploratoire des méthodes utilisées (features engineering & modèles de prédiction) ([2_Prediction_consommation.ipynb](https://github.com/Emeline2104/Predictive_energy_consumption/blob/master/notebooks/2_Prediction_consommation.ipynb)); 
   
 #### Scripts : 
 - Script principal du projet (*main.py*) qui effectue les étapes suivantes :
   - Chargement des données à partir du fichier spécifié dans le fichier de configuration (*[config.py](https://github.com/Emeline2104/Predictive_energy_consumption/blob/master/scr/config.py)*); 
-  - Nettoyage des données à l'aide d'un pipeline défini dans le module data_cleaning (*[data_cleaning.py](https://github.com/Emeline2104/Predictive_energy_consumption/blob/master/scr/preprocessing/data_cleaning.py)*;
+  - Nettoyage des données à l'aide d'un pipeline défini dans le module data_cleaning (*[data_cleaning.py](https://github.com/Emeline2104/Predictive_energy_consumption/blob/master/scr/preprocessing/data_cleaning.py)*);
   - Feature Engineering à l'aide d'un pipeline défini dans le module feature_engineering (*[feature_engineering.py](https://github.com/Emeline2104/Predictive_energy_consumption/blob/master/scr/preprocessing/feature_engineering.py)*);
   - Entraînement et évaluation d'un modèle de régression baseline (régression linéaire (RL)) en utilisant le pipeline défini dans le module baseline_model (*[baseline_model.py](https://github.com/Emeline2104/Predictive_energy_consumption/blob/master/scr/models/baseline_model.py)*);
   - Entraînement et évaluation d'un modèle XGBoost en utilisant le pipeline défini dans le module xgboost_model (*[xgboost_model.py](https://github.com/Emeline2104/Predictive_energy_consumption/blob/master/scr/models/xgboost_model.py)*).
