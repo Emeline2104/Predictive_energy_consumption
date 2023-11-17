@@ -35,7 +35,7 @@ Des pipelines ont été mis en place pour le pré-traitement des données et la 
   - Entraînement et évaluation d'un modèle de régression baseline (régression linéaire (RL)) en utilisant le pipeline défini dans le module baseline_model (*[baseline_model.py](https://github.com/Emeline2104/Predictive_energy_consumption/blob/master/scr/models/baseline_model.py)*);
   - Entraînement et évaluation d'un modèle XGBoost en utilisant le pipeline défini dans le module xgboost_model (*[xgboost_model.py](https://github.com/Emeline2104/Predictive_energy_consumption/blob/master/scr/models/xgboost_model.py)*).
     
-#### Support de présentation
+#### Support de présentation : 
 Un support de présentation de l'analyse exploratoire pour la soutenance est également disponible (*[3_Presentation](https://github.com/Emeline2104/Predictive_energy_consumption/blob/master/Presentation.pdf)*).
 
 ## Installation et exécution 
