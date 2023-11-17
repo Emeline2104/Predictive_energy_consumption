@@ -28,7 +28,7 @@ Des pipelines ont été mis en place pour le pré-traitement des données et la 
 - Notebook exploratoire des méthodes utilisées (features engineering & modèles de prédiction) ([2_Prediction_consommation.ipynb](https://github.com/Emeline2104/Predictive_energy_consumption/blob/master/notebooks/2_Prediction_consommation.ipynb)); 
   
 #### Scripts : 
-- Script principal du projet (*main.py*) qui effectue les étapes suivantes :
+- Script principal du projet (*[main.py](https://github.com/Emeline2104/Predictive_energy_consumption/blob/master/main.py)*) qui effectue les étapes suivantes :
   - Chargement des données à partir du fichier spécifié dans le fichier de configuration (*[config.py](https://github.com/Emeline2104/Predictive_energy_consumption/blob/master/scr/config.py)*); 
   - Nettoyage des données à l'aide d'un pipeline défini dans le module data_cleaning (*[data_cleaning.py](https://github.com/Emeline2104/Predictive_energy_consumption/blob/master/scr/preprocessing/data_cleaning.py)*);
   - Feature Engineering à l'aide d'un pipeline défini dans le module feature_engineering (*[feature_engineering.py](https://github.com/Emeline2104/Predictive_energy_consumption/blob/master/scr/preprocessing/feature_engineering.py)*);
