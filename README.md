@@ -9,7 +9,7 @@ Le principal objectif de ce projet est de développer un modèle de prédiction 
 <img width="1412" alt="Capture d’écran 2023-11-03 à 20 21 11" src="https://github.com/Emeline2104/Projet5_TAPIN_Final/assets/133622119/1fc0932a-5e22-40e4-a3fb-6fd104119b4e">
 
 ### Données : 
-Les données nécessaires au projet sont disponibles[ici](https://data.seattle.gov/dataset/2016-Building-Energy-Benchmarking/2bpz-gwpy).
+Les données nécessaires au projet sont disponibles [ici](https://data.seattle.gov/dataset/2016-Building-Energy-Benchmarking/2bpz-gwpy).
 Elles comprennent des relevés de la ville de 2016, notamment des données structurelles des bâtiments telles que la taille, l'usage, la date de construction, etc.
 
 ### Méthodologie : 
