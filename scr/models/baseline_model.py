@@ -130,6 +130,7 @@ class RLModel:
         Obtient le score RMSE de test et R2 de test.
         """
         return self.rmse_test, self.r2_test
+    
 class RLModelPipeline:
     """
     Classe représentant un pipeline regression linéaire complet.

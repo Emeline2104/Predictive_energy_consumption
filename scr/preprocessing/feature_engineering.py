@@ -6,16 +6,13 @@ Ce fichier regroupe des classes pour le nettoyage de données.
 Classes :
 - DataFeatureEngineering : Regroupe des méthodes spécifiques aux feature engineering.
 Méthodes : encode_target, process_physical_data, add_age_feature,
-preprocess_neighborhood_data, clean_numerical_columns, clean_data
-- FeatureEngineeringPipeline : Pipeline de nettoyage de données avec une étape de nettoyage 
-de type FeatureEngineering.
-Méthode : transform.
+preprocess_neighborhood_data, clean_numerical_columns, clean_data, transform
 
 Utilisation :
 Charger les données à nettoyer (x_train, y_train, x_test, y_test).
 Créer une instance de DataFeatureEngineering avec ces données.
-Créer une instance de FeatureEngineeringPipeline avec l'instance de DataFeatureEngineering.
-Exécuter le feature engineering en appelant la méthode transform de la FeatureEngineeringPipeline.
+Exécuter le feature engineering en appelant la méthode transform de la
+DataFeatureEngineering.
 Afficher les données nettoyées.
 """
 import numpy as np
@@ -237,54 +234,41 @@ class DataFeatureEngineering:
 
         return x_train, x_test, y_train, y_test
 
-class FeatureEngineeringPipeline:
-    """
-    Classe représentant un pipeline de nettoyage de données.
-
-    Attributes:
-    transformer (DataCleaner): Le transformateur utilisé pour nettoyer les données. 
-    """
-    def __init__(self, transformer):
-        self.transformer = transformer
-
-    def transform(self, x_train, x_test, y_train, y_test):
+    @staticmethod
+    def transform(x_train, x_test, y_train, y_test):
         """
-        Transforme les données en appliquant les étapes de nettoyage spécifiées 
-        par le transformateur.
+        Applique les transformations nécessaires à l'étude des données.
 
-        Args:
-        data (pd.DataFrame): Le DataFrame contenant les données à nettoyer.
-
-        Returns:
-        x_train (pd.DataFrame): Ensemble d'entraînement des features.
-        x_test (pd.DataFrame): Ensemble de test des features.
-        y_train (pd.DataFrame): Ensemble d'entraînement de la target.
-        y_test (pd.DataFrame): Ensemble de test de la target.
+        :param x_train: Données d'entraînement.
+        :param x_test: Données de test.
+        :param y_train: Variable cible des données d'entraînement.
+        :param indic_conso: Indicateurs de consommation.
+        :return: Données d'entraînement et de test transformées.
         """
-        x_train, x_test, y_train, y_test = self.transformer.process_physical_data(x_train,
+        x_train, x_test, y_train, y_test = DataFeatureEngineering.process_physical_data(x_train,
                                                                                   x_test,
                                                                                   y_train,
                                                                                   y_test)
-        x_train, x_test, y_train, y_test = self.transformer.add_age_feature(x_train,
+        x_train, x_test, y_train, y_test = DataFeatureEngineering.add_age_feature(x_train,
                                                                             x_test,
                                                                             y_train,
                                                                             y_test)
-        x_train, x_test, y_train, y_test = self.transformer.add_age_feature(x_train,
+        x_train, x_test, y_train, y_test = DataFeatureEngineering.add_age_feature(x_train,
                                                                             x_test,
                                                                             y_train,
                                                                             y_test)
-        x_train, x_test, y_train, y_test = self.transformer.encode_target(x_train,
+        x_train, x_test, y_train, y_test = DataFeatureEngineering.encode_target(x_train,
                                                                           x_test,
                                                                           y_train,
                                                                           y_test,
                                                                           )
-        x_train, x_test, y_train, y_test = self.transformer.clean_numerical_columns(
+        x_train, x_test, y_train, y_test = DataFeatureEngineering.clean_numerical_columns(
             x_train,
             x_test,
             y_train,
             y_test,
             )
-        x_train, x_test, y_train, y_test = self.transformer.clean_data(
+        x_train, x_test, y_train, y_test = DataFeatureEngineering.clean_data(
             x_train,
             x_test,
             y_train,

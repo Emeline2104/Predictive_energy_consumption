@@ -9,4 +9,6 @@ data/
 venv/
 *.log
 .vscode/
-
+*.DS_Store
+mlruns
+*.cpython*

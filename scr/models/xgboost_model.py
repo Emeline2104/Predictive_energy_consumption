@@ -185,7 +185,7 @@ class XGBoostModel:
         Obtient le score RMSE de test et R2 de test.
         """
         return self.rmse_test, self.r2_test
-    
+
 class XGBoostPipeline:
     """
     Classe représentant un pipeline XGBoost complet.
@@ -226,4 +226,4 @@ class XGBoostPipeline:
 
         # Étape 4: Affichage de l'importance des caractéristiques
         self.model_trainer.get_feature_importance(x_train)
-    
+

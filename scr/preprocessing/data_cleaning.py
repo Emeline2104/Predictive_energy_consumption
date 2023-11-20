@@ -7,16 +7,12 @@ Ce fichier regroupe des classes pour le nettoyage de données.
 Classes :
 - DataCleaner : Regroupe des méthodes spécifiques de nettoyage de données.
 Méthodes : extract_building_types, drop_outliers, remove_missing_data, apply_usage_correspondence,
-split_data
-- DataCleaningPipeline : Pipeline de nettoyage de données avec une étape de nettoyage 
-de type DataCleaner.
-Méthode : transform.
+split_data, transform
 
 Utilisation :
 Charger les données à nettoyer depuis un fichier CSV.
 Créer une instance de DataCleaner avec ces données.
-Créer une instance de DataCleaningPipeline avec l'instance de DataCleaner.
-Exécuter le nettoyage en appelant la méthode transform de la classe DataCleaningPipeline.
+Exécuter le nettoyage en appelant la méthode transform de la classe DataCleaner.
 Afficher les données nettoyées.
 """
 import pandas as pd
@@ -206,45 +202,16 @@ class DataCleaner:
 
         return x_train, x_test, y_train, y_test
 
-class DataCleaningPipeline:
-    """
-    Classe représentant un pipeline de nettoyage de données.
-
-    Attributes:
-    transformer (DataCleaner): Le transformateur utilisé pour nettoyer les données.
-    x_train (pd.DataFrame): Ensemble d'entraînement des features.
-    x_test (pd.DataFrame): Ensemble de test des features.
-    y_train (pd.DataFrame): Ensemble d'entraînement de la target.
-    y_test (pd.DataFrame): Ensemble de test de la target.
-    """
-    def __init__(self, transformer):
-        self.transformer = transformer
-        self.x_train = None
-        self.x_test = None
-        self.y_test = None
-        self.y_train = None
-
-    def transform(self, data):
+    @staticmethod
+    def transform(data):
         """
-        Transforme les données en appliquant les étapes de nettoyage spécifiées 
-        par le transformateur.
-
-        Args:
-        data (pd.DataFrame): Le DataFrame contenant les données à nettoyer.
+        Applique les transformations de nettoyage spécifiques à un DataFrame.
 
         Returns:
-        x_train (pd.DataFrame): Ensemble d'entraînement des features.
-        x_test (pd.DataFrame): Ensemble de test des features.
-        y_train (pd.DataFrame): Ensemble d'entraînement de la target.
-        y_test (pd.DataFrame): Ensemble de test de la target.
+        pd.DataFrame: Le DataFrame nettoyé.
         """
-        data = self.transformer.extract_building_types(data)
-        data = self.transformer.drop_outliers(data)
-        data = self.transformer.remove_missing_data(data)
-        data = self.transformer.apply_usage_correspondence(data)
-
-        x_train, x_test, y_train, y_test = self.transformer.split_data(data)
-        return x_train, x_test, y_train, y_test
-
-if __name__ == "__main__":
-    data_conso = pd.read_csv("data/cleaned/data_extract.csv") # A mettre en maj -> var globale
+        data = DataCleaner.extract_building_types(data)
+        data = DataCleaner.drop_outliers(data)
+        data = DataCleaner.remove_missing_data(data)
+        data = DataCleaner.apply_usage_correspondence(data)
+        return data
